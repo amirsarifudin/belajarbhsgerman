@@ -8,27 +8,22 @@
 </head>
 <body>
 
-<div class="container">
+<div class="container menu">
   <h1>🇩🇪 Belajar Bahasa Jerman</h1>
-  <p class="subtitle">Isi arti Bahasa Indonesia • Dengarkan pelafalan</p>
+  <p class="subtitle">Pilih mode belajar kamu hari ini</p>
 
-  <div class="progress-container">
-    <div id="progressBar">0%</div>
-  </div>
+  <div class="menu-box">
+    <a href="hafalan.html" class="menu-card">
+      <h2>📘 Belajar Menghafal</h2>
+      <p>Baca semua materi lengkap<br>arti & pengertian jelas</p>
+    </a>
 
-  <div class="actions">
-    <button class="reset-btn" onclick="resetProgress()">🔄 Reset Latihan</button>
-  </div>
-
-  <div id="cards"></div>
-
-  <div class="finish">
-    <button onclick="finishDay()">✅ Selesai German Hari Ini</button>
+    <a href="quiz.html" class="menu-card">
+      <h2>🧠 Mulai Kuis</h2>
+      <p>Latihan mengingat<br>dengan kuis interaktif</p>
+    </a>
   </div>
 </div>
 
-<div id="alertBox"></div>
-
-<script src="script.js"></script>
 </body>
 </html>

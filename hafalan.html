@@ -6,21 +6,285 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
 </head>
+<style>
+  body{
+  background:linear-gradient(135deg,#0f172a,#1e293b);
+  font-family:system-ui;
+  margin:0;
+  color:#fff;
+}
+
+.container{
+  max-width:900px;
+  margin:auto;
+  padding:20px;
+}
+
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:20px;
+}
+
+.home-btn{
+  background:#2563eb;
+  border:none;
+  padding:10px 18px;
+  border-radius:12px;
+  color:#fff;
+  font-weight:600;
+  cursor:pointer;
+  transition:.3s;
+}
+
+.home-btn:hover{
+  transform:scale(1.05);
+  background:#1d4ed8;
+}
+
+.mode-badge{
+  background:#22c55e;
+  padding:8px 14px;
+  border-radius:20px;
+  font-weight:600;
+  font-size:14px;
+}
+
+.subtitle{
+  color:#cbd5e1;
+  margin-bottom:20px;
+}
+
+#searchInput{
+  width:100%;
+  padding:12px;
+  border-radius:12px;
+  border:none;
+  margin-bottom:20px;
+  font-size:15px;
+}
+
+.hafalan-section{
+  margin-bottom:30px;
+  animation:fadeIn .6s ease;
+}
+.evolution{
+  animation: pop 0.6s ease;
+}
+
+@keyframes pop{
+  0%{transform:scale(0.8)}
+  50%{transform:scale(1.1)}
+  100%{transform:scale(1)}
+}
+
+.hafalan-section h2{
+  background:#334155;
+  padding:10px;
+  border-radius:8px;
+}
+
+.hafalan-item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:#1e293b;
+  padding:12px;
+  margin:8px 0;
+  border-radius:12px;
+  transition:.3s;
+}
+.btn-group{
+  display:flex;
+  gap:8px;
+}
+
+.hafalan-item button{
+  background:#2563eb;
+  color:white;
+  border:none;
+  padding:6px 10px;
+  border-radius:8px;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.hafalan-item button:hover{
+  transform:scale(1.1);
+}
+.ai-dashboard{
+  display:flex;
+  gap:15px;
+  justify-content:center;
+  flex-wrap:wrap;
+  margin-bottom:20px;
+}
+
+.ai-stat{
+  background:#0f172a;
+  color:#fff;
+  padding:10px 18px;
+  border-radius:12px;
+  font-weight:600;
+}
+
+.alert-modern{
+  position:fixed;
+  top:20px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#111827;
+  color:#fff;
+  padding:12px 20px;
+  border-radius:12px;
+  opacity:0;
+  transition:.4s;
+  z-index:999;
+}
+
+.alert-modern.show{
+  opacity:1;
+}
+
+.progress-box{
+  margin-bottom:20px;
+}
+
+.progress-bar{
+  background:#334155;
+  height:12px;
+  border-radius:20px;
+  overflow:hidden;
+}
+
+#progressFill{
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,#22c55e,#16a34a);
+  transition:.4s;
+}
+
+.favorite{
+  color:#f87171;
+  font-size:18px;
+  cursor:pointer;
+}
+
+.badge-box{
+  margin-top:15px;
+  padding:12px;
+  background:#1e293b;
+  border-radius:12px;
+}
+
+.hafalan-item:hover{
+  transform:translateY(-3px);
+  background:#334155;
+}
+
+.hafalan-item button{
+  background:#f59e0b;
+  border:none;
+  padding:8px 12px;
+  border-radius:10px;
+  cursor:pointer;
+  font-size:16px;
+}
+
+.custom-alert{
+  position:fixed;
+  top:20px;
+  right:20px;
+  background:#22c55e;
+  padding:15px 20px;
+  border-radius:12px;
+  font-weight:600;
+  opacity:0;
+  transform:translateX(100px);
+  transition:.4s;
+  z-index:999;
+}
+
+.custom-alert.show{
+  opacity:1;
+  transform:translateX(0);
+}
+
+@keyframes fadeIn{
+  from{opacity:0; transform:translateY(10px);}
+  to{opacity:1; transform:translateY(0);}
+}
+
+/* Responsive */
+@media(max-width:600px){
+  .hafalan-item{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:8px;
+  }
+}
+
+</style>
 <body>
 
 <div class="container">
-  <h1>📘 Mode Menghafal</h1>
-  <p class="subtitle">Baca • Dengarkan • Pahami</p>
 
-  <div class="actions">
-    <a href="index.html" class="back-btn">⬅ Menu Utama</a>
+  <div class="topbar">
+    <button class="home-btn" onclick="window.location.href='index.html'">
+      🏠 Home
+    </button>
+
+    <div class="mode-badge">
+      🔥 CEFR MASTER MODE
+    </div>
   </div>
 
-  <div id="materi"></div>
+  <h1>📘 Mode Menghafal</h1>
+  <p class="subtitle">Baca • Dengarkan • Pahami • Ulangi</p>
+
+  <input type="text" id="searchInput" placeholder="🔍 Cari kosakata..." />
+<div class="progress-box">
+  <div class="progress-text">
+    📊 Progress Hafalan: <span id="progressText">0%</span>
+  </div>
+  <div class="progress-bar">
+    <div id="progressFill"></div>
+  </div>
+</div>
+<div class="ai-dashboard">
+
+  <div class="ai-stat">
+    ⭐ XP: <span id="xp">0</span>
+  </div>
+
+  <div class="ai-stat">
+    🏆 Level: <span id="level">A1</span>
+  </div>
+
+  <div class="ai-stat">
+    🔥 Streak: <span id="streak">0</span> hari
+  </div>
+
 </div>
 
-<!-- 🔥 WAJIB URUTANNYA -->
+<div id="alertBox" class="alert-modern"></div>
+<div style="text-align:center;margin:15px;">
+  <button onclick="startWeakTraining()" class="ai-btn">
+    🧠 Latihan Kata Lemah (AI Mode)
+  </button>
+</div>
+
+  <div id="materi"></div>
+
+</div>
+<div class="ai-stats">
+  <p>📚 Learned: <span id="learnedCount"></span></p>
+  <p>⚠️ Weak Words: <span id="weakCount"></span></p>
+</div>
 <script src="data-lessons.js"></script>
 <script src="hafalan.js"></script>
+
 </body>
+
 </html>

@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Level A2 – Bahasa Jerman 🇩🇪🔥</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+:root{
+  --primary:#2563eb;
+  --success:#16a34a;
+  --danger:#dc2626;
+  --bg:#f8fafc;
+  --card:#ffffff;
+}
+
+*{box-sizing:border-box;font-family:system-ui,-apple-system,Segoe UI,Roboto}
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:#0f172a;
+}
+
+header{
+  background:linear-gradient(135deg,#0f172a,#1e3a8a);
+  color:#fff;
+  padding:28px 16px;
+  text-align:center;
+}
+
+header h1{margin:0;font-size:1.9rem}
+header p{margin-top:6px;opacity:.9}
+
+.container{
+  max-width:900px;
+  margin:auto;
+  padding:16px;
+}
+
+.progress-wrap{
+  background:#e5e7eb;
+  border-radius:999px;
+  overflow:hidden;
+  margin:12px 0 20px;
+}
+
+#progressBar{
+  width:0%;
+  background:linear-gradient(90deg,#22c55e,#16a34a);
+  color:#fff;
+  text-align:center;
+  padding:6px;
+  font-size:.85rem;
+  transition:.4s ease;
+}
+
+.card{
+  background:var(--card);
+  border-radius:14px;
+  padding:18px;
+  margin-bottom:18px;
+  box-shadow:0 10px 25px rgba(0,0,0,.06);
+}
+
+.tag{
+  display:inline-block;
+  background:#e0e7ff;
+  color:#1e3a8a;
+  padding:4px 10px;
+  border-radius:999px;
+  font-size:.8rem;
+  margin-bottom:10px;
+}
+
+button{
+  border:none;
+  border-radius:10px;
+  padding:10px 14px;
+  margin:6px 6px 6px 0;
+  cursor:pointer;
+  font-weight:600;
+  transition:.25s;
+}
+.badge{
+  display:inline-block;
+  margin:12px 0;
+  padding:8px 16px;
+  background:gold;
+  color:#000;
+  font-weight:700;
+  border-radius:999px;
+  animation:pop .4s ease;
+}
+.cefr{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.level{
+  flex:1;
+  text-align:center;
+  padding:10px;
+  border-radius:8px;
+  background:#e5e7eb;
+  font-weight:700;
+  transition:.3s;
+}
+
+.level.active{
+  background:#22c55e;
+  color:#fff;
+}
+
+.level.current{
+  background:#2563eb;
+  color:#fff;
+}
+
+
+@keyframes pop{
+  0%{transform:scale(.7);opacity:0}
+  100%{transform:scale(1);opacity:1}
+}
+
+
+.ok{background:#dcfce7;color:#166534}
+.warn{background:#fee2e2;color:#7f1d1d}
+.speak{background:#dbeafe;color:#1e3a8a}
+
+button:hover{transform:translateY(-2px)}
+
+#alertBox{
+  position:fixed;
+  top:20px;
+  left:50%;
+  transform:translateX(-50%) translateY(-20px);
+  background:#0f172a;
+  color:#fff;
+  padding:14px 22px;
+  border-radius:12px;
+  opacity:0;
+  pointer-events:none;
+  transition:.4s ease;
+  box-shadow:0 15px 40px rgba(0,0,0,.25);
+  z-index:999;
+}
+
+#alertBox.show{
+  opacity:1;
+  transform:translateX(-50%) translateY(0);
+}
+
+#alertBox.success{background:var(--success)}
+#alertBox.error{background:var(--danger)}
+</style>
+
+<script>
+// 🔐 CEK A1
+if(localStorage.getItem("unlockA2") !== "true"){
+  alert("❌ Kamu harus lulus A1 dulu");
+  location.href = "UjianA1.html";
+}
+
+// 🔊 SPEAK
+function speak(text){
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = "de-DE";
+  u.rate = 0.9;
+  speechSynthesis.speak(u);
+}
+
+// 📊 DATA SOAL A2
+const questions = [
+  {q:"Ich habe heute viel ___", a:["gearbeitet","arbeiten"], c:0},
+  {q:"Morgen ___ ich nach Berlin.", a:["fahre","fahren"], c:0},
+  {q:"Er ___ seit zwei Jahren Deutsch.", a:["lernt","lernen"], c:0},
+  {q:"Wie ___ kostet das Ticket?", a:["viel","alt"], c:0},
+  {q:"Ich gehe ___ dem Bus zur Arbeit.", a:["mit","auf"], c:0},
+  {q:"Am Abend ___ ich fern.", a:["sehe","sehen"], c:0},
+  {q:"Sie ___ gestern zu Hause.", a:["war","ist"], c:0},
+  {q:"Wir ___ um 7 Uhr auf.", a:["stehen","steht"], c:0},
+  {q:"Bahnhof bedeutet?", a:["Stasiun","Bandara"], c:0},
+  {q:"Einkaufen artinya?", a:["Berbelanja","Bekerja"], c:0},
+  {q:"Ich ___ kein Auto.", a:["habe","bin"], c:0},
+  {q:"Heute ist das Wetter ___", a:["schön","alt"], c:0},
+  {q:"Er kommt ___ Deutschland.", a:["aus","von"], c:0},
+  {q:"Wir ___ morgen frei.", a:["haben","sind"], c:0},
+  {q:"Sie spricht sehr ___", a:["gut","gutem"], c:0},
+  {q:"Nach der Arbeit ___ ich nach Hause.", a:["gehe","gehen"], c:0},
+  {q:"Ich trinke gern ___", a:["Kaffee","Auto"], c:0},
+  {q:"Der Bus kommt ___ fünf Minuten.", a:["in","auf"], c:0},
+  {q:"___ lernst du Deutsch?", a:["Warum","Wie alt"], c:0},
+  {q:"Am Wochenende ___ wir Freunde.", a:["besuchen","besucht"], c:0},
+];
+
+let index = 0;
+let score = 0;
+
+function answer(i){
+  const alertBox = document.getElementById("alertBox");
+  const bar = document.getElementById("progressBar");
+
+  if(i === questions[index].c){
+    score += Math.round(100 / questions.length);
+    alertBox.textContent = "✅ Jawaban benar";
+    alertBox.className = "show success";
+  }else{
+    alertBox.textContent = "❌ Jawaban salah";
+    alertBox.className = "show error";
+  }
+
+  setTimeout(()=>alertBox.className="",1400);
+  index++;
+
+  let percent = Math.min(100, Math.round((index / questions.length) * 100));
+  bar.style.width = percent + "%";
+  bar.textContent = percent + "%";
+
+  render();
+}
+
+function render(){
+  const qBox = document.getElementById("quiz");
+
+ if(index >= questions.length){
+
+  if(score === 100){
+
+    localStorage.setItem("unlockA2Pro","true");
+
+    qBox.innerHTML = `
+      <h2>🎉 PERFECT SCORE!</h2>
+      <p><b>Skor:</b> ${score}</p>
+      <p style="color:green;font-weight:700">
+        🚀 Menuju A2 PRO...
+      </p>
+    `;
+
+    setTimeout(()=>{
+      window.location.href = "a2-pro.html";
+    },2000);
+
+  }else{
+
+    qBox.innerHTML = `
+      <h2>❌ Belum 100%</h2>
+      <p>Skor: ${score}</p>
+      <p style="color:#dc2626;font-weight:600">
+        🔁 Harus 100% untuk lanjut ke A2 PRO
+      </p>
+      <button onclick="location.reload()">Ulangi</button>
+    `;
+  }
+
+  return;
+}
+
+  document.getElementById("question").textContent = questions[index].q;
+  document.getElementById("a1").textContent = questions[index].a[0];
+  document.getElementById("a2").textContent = questions[index].a[1];
+}
+
+window.onload = render;
+</script>
+<script>
+  function saveStats(score){
+  let history = JSON.parse(localStorage.getItem("a2History")) || [];
+  history.push({
+    score: score,
+    date: new Date().toLocaleString()
+  });
+  localStorage.setItem("a2History", JSON.stringify(history));
+}
+
+</script>
+<script>
+  function updateCEFR(){
+  if(localStorage.getItem("unlockA2") === "true"){
+    document.getElementById("lvlA1").classList.add("active");
+  }
+
+  if(localStorage.getItem("unlockA2Pro") === "true"){
+    document.getElementById("lvlA2").classList.add("active");
+  }else{
+    document.getElementById("lvlA2").classList.add("current");
+  }
+}
+
+window.onload = function(){
+  render();
+  updateCEFR();
+};
+
+</script>
+</head>
+
+<body>
+
+<header>
+  <div style="text-align:center;margin:15px;">
+  <button onclick="window.location.href='index.html'" 
+          style="background:#0f172a;color:#fff;padding:10px 20px;border-radius:10px;">
+    🏠 Kembali ke Home
+  </button>
+</div>
+
+  <h1>🇩🇪 Level A2 – Bahasa Jerman</h1>
+  <p>Next Step Setelah A1 • Grammar • Reading • Wortschatz</p>
+</header>
+
+<div class="container">
+
+<div class="progress-wrap">
+  <div id="progressBar">0%</div>
+</div>
+<div class="card">
+  <span class="tag">CEFR Progress</span>
+  <div class="cefr">
+    <div class="level" id="lvlA1">A1</div>
+    <div class="level" id="lvlA2">A2</div>
+    <div class="level">B1</div>
+    <div class="level">B2</div>
+    <div class="level">C1</div>
+    <div class="level">C2</div>
+  </div>
+</div>
+
+<div class="card" id="quiz">
+  <span class="tag">A2 Question</span>
+  <h3 id="question"></h3>
+  <button id="a1" class="ok" onclick="answer(0)"></button>
+  <button id="a2" class="warn" onclick="answer(1)"></button>
+</div>
+
+</div>
+
+<div id="alertBox"></div>
+
+</body>
+</html>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Ujian Bahasa Jerman A1 PRO 🚀</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{margin:0;font-family:system-ui;background:#f1f5f9}
+header{background:#0f172a;color:#fff;padding:24px;text-align:center}
+.container{max-width:800px;margin:auto;padding:16px}
+.card{
+  background:#fff;padding:18px;border-radius:14px;
+  box-shadow:0 10px 25px rgba(0,0,0,.08);margin-bottom:16px
+}
+button{
+  padding:10px 14px;border:none;border-radius:10px;
+  margin:6px;font-weight:600;cursor:pointer
+}
+.ok{background:#dcfce7}
+.warn{background:#fee2e2}
+.progress{background:#e5e7eb;border-radius:999px;overflow:hidden}
+#bar{
+  background:#22c55e;color:#fff;padding:6px;
+  width:0%;transition:.4s
+}
+#alert{
+  position:fixed;top:20px;left:50%;
+  transform:translateX(-50%);
+  padding:14px 22px;border-radius:12px;
+  color:#fff;opacity:0;transition:.4s
+}
+.show{opacity:1}
+.success{background:#16a34a}
+.error{background:#dc2626}
+</style>
+
+<script>
+if(localStorage.getItem("unlockA2") !== "true"){
+  alert("❌ A1 belum lulus");
+  location.href="UjianA1.html";
+}
+
+const questions = [
+ {q:"Ich ___ Deutsch.", a:["lerne","lernen"], c:0},
+ {q:"Wie ___ du?", a:["bist","bin"], c:0},
+ {q:"Ich fahre ___ Bus.", a:["mit dem","mit die"], c:0},
+ {q:"arbeiten artinya?", a:["bekerja","belajar"], c:0},
+ {q:"Wo ___ du?", a:["wohnst","wohnen"], c:0},
+];
+
+let i=0, score=0;
+
+function answer(x){
+  const alert=document.getElementById("alert");
+  if(x===questions[i].c){
+    score+=20;
+    alert.textContent="✅ Benar";
+    alert.className="show success";
+  }else{
+    alert.textContent="❌ Salah";
+    alert.className="show error";
+  }
+  setTimeout(()=>alert.className="",1200);
+  i++; render();
+}
+
+function render(){
+  const bar=document.getElementById("bar");
+  if(i>=questions.length){
+    document.getElementById("quiz").innerHTML=
+      `<h2>🎓 Skor Akhir: ${score}</h2>
+       <p>${score>=80?"🚀 SIAP A2":"🔁 ULANGI A1"}</p>`;
+    return;
+  }
+  bar.style.width=((i/questions.length)*100)+"%";
+  document.getElementById("q").textContent=questions[i].q;
+  document.getElementById("a1").textContent=questions[i].a[0];
+  document.getElementById("a2").textContent=questions[i].a[1];
+}
+window.onload=render;
+</script>
+<script>
+function render(){
+  const bar=document.getElementById("bar");
+
+  if(i>=questions.length){
+
+    bar.style.width = "100%";
+
+    if(score>=80){
+      localStorage.setItem("unlockA2","true");
+
+      document.getElementById("quiz").innerHTML=
+      `<h2>🎓 Skor Akhir: ${score}</h2>
+       <p style="color:green;font-weight:700">🚀 SIAP KE LEVEL A2</p>
+       <button onclick="location.href='level-a2.html'">
+         🚀 Masuk Level A2
+       </button>`;
+    }else{
+      document.getElementById("quiz").innerHTML=
+      `<h2>❌ Skor: ${score}</h2>
+       <p>🔁 Silakan ulangi</p>
+       <button onclick="location.reload()">Ulangi</button>`;
+    }
+    return;
+  }
+
+  bar.style.width=((i/questions.length)*100)+"%";
+  document.getElementById("q").textContent=questions[i].q;
+  document.getElementById("a1").textContent=questions[i].a[0];
+  document.getElementById("a2").textContent=questions[i].a[1];
+}
+
+</script>
+
+</head>
+
+<body>
+
+<header>
+  <div style="text-align:center;margin:15px;">
+  <button onclick="window.location.href='index.html'" 
+          style="background:#0f172a;color:#fff;padding:10px 20px;border-radius:10px;">
+    🏠 Kembali ke Home
+  </button>
+</div>
+
+<h1>Ujian Bahasa Jerman A1 PRO 🚀</h1>
+<p>Menuju Level A2</p>
+</header>
+
+<div class="container">
+
+<div class="progress"><div id="bar">Progress</div></div>
+
+<div class="card" id="quiz">
+<h3 id="q"></h3>
+<button id="a1" class="ok" onclick="answer(0)"></button>
+<button id="a2" class="warn" onclick="answer(1)"></button>
+</div>
+
+</div>
+
+<div id="alert"></div>
+</body>
+</html>

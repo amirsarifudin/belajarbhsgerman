@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>A2 PRO – Bahasa Jerman 🇩🇪🔥</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+:root{
+  --primary:#2563eb;
+  --success:#16a34a;
+  --danger:#dc2626;
+  --bg:#f8fafc;
+  --card:#ffffff;
+}
+
+*{box-sizing:border-box;font-family:system-ui}
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:#0f172a;
+}
+
+header{
+  background:linear-gradient(135deg,#020617,#1e3a8a);
+  color:#fff;
+  padding:30px 16px;
+  text-align:center;
+}
+
+.container{
+  max-width:900px;
+  margin:auto;
+  padding:16px;
+}
+
+.progress{
+  background:#e5e7eb;
+  border-radius:999px;
+  overflow:hidden;
+  margin:16px 0 24px;
+}
+
+#bar{
+  width:0%;
+  background:linear-gradient(90deg,#22c55e,#16a34a);
+  color:#fff;
+  text-align:center;
+  padding:6px;
+  transition:.4s;
+}
+
+.card{
+  background:#fff;
+  padding:20px;
+  border-radius:16px;
+  box-shadow:0 12px 30px rgba(0,0,0,.08);
+}
+
+button{
+  border:none;
+  border-radius:12px;
+  padding:12px 16px;
+  margin:8px 8px 0 0;
+  cursor:pointer;
+  font-weight:600;
+  transition:.25s;
+}
+
+.ok{background:#dcfce7;color:#166534}
+.warn{background:#fee2e2;color:#7f1d1d}
+
+button:hover{transform:translateY(-2px)}
+
+#alert{
+  position:fixed;
+  top:20px;
+  left:50%;
+  transform:translateX(-50%) translateY(-20px);
+  padding:14px 24px;
+  border-radius:14px;
+  color:#fff;
+  opacity:0;
+  transition:.4s;
+  box-shadow:0 20px 50px rgba(0,0,0,.3);
+  z-index:999;
+}
+
+#alert.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.success{background:#16a34a}
+.error{background:#dc2626}
+</style>
+
+<script>
+// 🔐 CEK A2
+if(localStorage.getItem("unlockA2Pro") !== "true"){
+  alert("❌ Level A2 belum lulus");
+  location.href = "level-a2.html";
+}
+
+// 🧠 BANK SOAL A2 PRO
+const bank = [
+ {q:"Ich ___ gestern gearbeitet.", a:["habe","bin"], c:0},
+ {q:"Er ist ___ dem Bus gefahren.", a:["mit","auf"], c:0},
+ {q:"Wir ___ schon gegessen.", a:["haben","sind"], c:0},
+ {q:"Sie ___ seit 2022 hier.", a:["wohnt","wohnen"], c:0},
+ {q:"Ich interessiere mich ___ Musik.", a:["für","mit"], c:0},
+ {q:"Er hat keine Zeit ___ heute.", a:["für","an"], c:0},
+ {q:"Morgen ___ ich früher auf.", a:["stehe","steht"], c:0},
+ {q:"Wir fahren ___ Urlaub.", a:["in den","im"], c:0},
+ {q:"Ich habe ___ Hunger.", a:["großen","groß"], c:0},
+ {q:"Sie spricht ___ Deutsch.", a:["gut","gute"], c:0},
+ {q:"Nach der Arbeit ___ ich Sport.", a:["mache","macht"], c:0},
+ {q:"Ich war gestern ___ Hause.", a:["zu","in"], c:0},
+ {q:"Der Zug kommt ___ 5 Minuten.", a:["in","auf"], c:0},
+ {q:"Er hört gern ___ Musik.", a:["Rock","rock"], c:0},
+ {q:"Ich ___ kein Auto.", a:["habe","bin"], c:0},
+ {q:"Am Abend ___ wir fern.", a:["sehen","sehe"], c:1},
+ {q:"Sie geht ___ Supermarkt.", a:["zum","bei"], c:0},
+ {q:"Wir ___ Freunde besucht.", a:["haben","sind"], c:0},
+ {q:"Ich lerne Deutsch ___ zwei Jahren.", a:["seit","für"], c:0},
+ {q:"Er arbeitet ___ Firma Bosch.", a:["bei","mit"], c:0},
+];
+
+// 🔀 RANDOM 15 SOAL
+const questions = bank.sort(()=>0.5-Math.random()).slice(0,15);
+
+let i=0, score=0;
+
+function answer(x){
+  const alert=document.getElementById("alert");
+  if(x===questions[i].c){
+    score+=Math.round(100/questions.length);
+    alert.textContent="✅ Benar";
+    alert.className="show success";
+  }else{
+    alert.textContent="❌ Salah";
+    alert.className="show error";
+  }
+  setTimeout(()=>alert.className="",1200);
+  i++; render();
+}
+
+function render(){
+  const bar=document.getElementById("bar");
+  const quiz=document.getElementById("quiz");
+
+  bar.style.width=Math.round((i/questions.length)*100)+"%";
+  bar.textContent=Math.round((i/questions.length)*100)+"%";
+
+  if(i>=questions.length){
+    if(score>=80){
+      localStorage.setItem("unlockB1","true");
+      quiz.innerHTML=`
+        <h2>🏆 LULUS A2 PRO</h2>
+        <p><b>Skor:</b> ${score}</p>
+        <p style="color:green;font-weight:700">🚀 SIAP KE LEVEL B1</p>
+      `;
+    }else{
+      quiz.innerHTML=`
+        <h2>❌ BELUM LULUS</h2>
+        <p>Skor: ${score}</p>
+        <button onclick="location.reload()">🔁 Ulangi</button>
+      `;
+    }
+    return;
+  }
+
+  document.getElementById("q").textContent=questions[i].q;
+  document.getElementById("a1").textContent=questions[i].a[0];
+  document.getElementById("a2").textContent=questions[i].a[1];
+}
+
+window.onload=render;
+</script>
+</head>
+
+<body>
+
+<header>
+  <div style="text-align:center;margin:15px;">
+  <button onclick="window.location.href='index.html'" 
+          style="background:#0f172a;color:#fff;padding:10px 20px;border-radius:10px;">
+    🏠 Kembali ke Home
+  </button>
+</div>
+
+<h1>🇩🇪 LEVEL A2 PRO</h1>
+<p>Grammar • Wortschatz • Alltag • Arbeit</p>
+</header>
+
+<div class="container">
+
+<div class="progress">
+  <div id="bar">0%</div>
+</div>
+
+<div class="card" id="quiz">
+  <h3 id="q"></h3>
+  <button id="a1" class="ok" onclick="answer(0)"></button>
+  <button id="a2" class="warn" onclick="answer(1)"></button>
+</div>
+
+</div>
+
+<div id="alert"></div>
+
+</body>
+</html>

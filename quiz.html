@@ -9,6 +9,13 @@
 <body>
 
 <div class="container">
+  <div style="text-align:center;margin:15px;">
+  <button onclick="window.location.href='index.html'" 
+          style="background:#0f172a;color:#fff;padding:10px 20px;border-radius:10px;">
+    🏠 Kembali ke Home
+  </button>
+</div>
+
   <h1>🧠 Kuis Bahasa Jerman</h1>
   <p class="subtitle">Isi arti Bahasa Indonesia • Dengarkan pelafalan</p>
 
@@ -16,16 +23,14 @@
     <div id="progressBar">0%</div>
   </div>
 
-  <div class="actions">
-    <button class="reset-btn" onclick="resetProgress()">🔄 Reset Latihan</button>
-    <a href="index.html" class="back-btn">⬅ Menu</a>
-  </div>
-
   <div id="cards"></div>
 </div>
 
 <div id="alertBox"></div>
 
+<!-- 🔥 WAJIB: DATA DULU -->
+<script src="data-lessons.js"></script>
 <script src="script.js"></script>
+
 </body>
 </html>

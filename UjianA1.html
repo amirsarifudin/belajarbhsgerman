@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Ujian Bahasa Jerman A1 – Gate 🚀</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+:root{
+  --primary:#2563eb;
+  --success:#16a34a;
+  --danger:#dc2626;
+  --bg:#f8fafc;
+}
+*{box-sizing:border-box;font-family:system-ui}
+body{margin:0;background:var(--bg);color:#0f172a}
+
+header{
+  background:linear-gradient(135deg,#2563eb,#1e40af);
+  color:#fff;padding:26px;text-align:center
+}
+.container{max-width:900px;margin:auto;padding:16px}
+
+.progress-wrap{
+  background:#e5e7eb;border-radius:999px;overflow:hidden;margin:14px 0
+}
+#progressBar{
+  width:0%;background:linear-gradient(90deg,#22c55e,#16a34a);
+  color:#fff;text-align:center;padding:6px;font-size:.85rem;
+  transition:.4s
+}
+
+.card{
+  background:#fff;border-radius:14px;padding:18px;
+  box-shadow:0 10px 25px rgba(0,0,0,.06);margin-bottom:16px
+}
+.tag{
+  display:inline-block;background:#e0e7ff;color:#1e3a8a;
+  padding:4px 10px;border-radius:999px;font-size:.8rem;margin-bottom:8px
+}
+button{
+  border:none;border-radius:10px;padding:10px 14px;
+  margin:6px 6px 0 0;font-weight:600;cursor:pointer
+}
+.ok{background:#dcfce7}
+.warn{background:#fee2e2}
+
+#alert{
+  position:fixed;top:20px;left:50%;
+  transform:translateX(-50%) translateY(-20px);
+  background:#0f172a;color:#fff;
+  padding:14px 22px;border-radius:12px;
+  opacity:0;transition:.4s;z-index:99
+}
+#alert.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.success{background:var(--success)}
+.error{background:var(--danger)}
+</style>
+
+<script>
+let progress = 0;
+const TOTAL = 5; // ✅ SESUAI JUMLAH SOAL
+
+function answer(correct){
+  const bar = document.getElementById("progressBar");
+  const alert = document.getElementById("alert");
+
+  if(correct){
+    progress++;
+    alert.textContent = "✅ Benar";
+    alert.className = "show success";
+  }else{
+    alert.textContent = "❌ Salah – ulangi sampai benar";
+    alert.className = "show error";
+  }
+
+  let percent = Math.round((progress / TOTAL) * 100);
+  if(percent > 100) percent = 100;
+
+  bar.style.width = percent + "%";
+  bar.textContent = percent + "%";
+
+  if(percent === 100){
+    localStorage.setItem("unlockA2","true");
+    setTimeout(()=>{
+      alert.textContent = "🎓 LULUS A1 – PRO TERBUKA!";
+      alert.className = "show success";
+      setTimeout(()=>location.href="ujian-a1-pro.html",1500);
+    },800);
+  }
+
+  setTimeout(()=>alert.className="",1500);
+}
+</script>
+</head>
+
+<body>
+
+<header>
+  <div style="text-align:center;margin:15px;">
+  <button onclick="window.location.href='index.html'" 
+          style="background:#0f172a;color:#fff;padding:10px 20px;border-radius:10px;">
+    🏠 Kembali ke Home
+  </button>
+</div>
+
+<h1>🏁 Ujian Bahasa Jerman A1</h1>
+<p>HARUS 100% untuk lanjut 🚀</p>
+</header>
+
+<div class="container">
+
+<div class="progress-wrap">
+  <div id="progressBar">0%</div>
+</div>
+
+<!-- SOAL 1 -->
+<div class="card">
+<span class="tag">Listening</span>
+<p>Wie alt bist du?</p>
+<button class="ok" onclick="answer(true)">Berapa umurmu</button>
+<button class="warn" onclick="answer(false)">Di mana kamu tinggal</button>
+</div>
+
+<!-- SOAL 2 -->
+<div class="card">
+<span class="tag">Grammar</span>
+<p>Ich ___ Deutsch.</p>
+<button class="ok" onclick="answer(true)">lerne</button>
+<button class="warn" onclick="answer(false)">lernen</button>
+</div>
+
+<!-- SOAL 3 -->
+<div class="card">
+<span class="tag">Wortschatz</span>
+<p>arbeiten artinya?</p>
+<button class="ok" onclick="answer(true)">Bekerja</button>
+<button class="warn" onclick="answer(false)">Belajar</button>
+</div>
+
+<!-- SOAL 4 -->
+<div class="card">
+<span class="tag">Reading</span>
+<p>Ich arbeite heute.</p>
+<button class="ok" onclick="answer(true)">Saya bekerja hari ini</button>
+<button class="warn" onclick="answer(false)">Saya tidur</button>
+</div>
+
+<!-- SOAL 5 -->
+<div class="card">
+<span class="tag">Grammar</span>
+<p>___ kommst du?</p>
+<button class="ok" onclick="answer(true)">Woher</button>
+<button class="warn" onclick="answer(false)">Wie</button>
+</div>
+
+</div>
+
+<div id="alert"></div>
+</body>
+</html>

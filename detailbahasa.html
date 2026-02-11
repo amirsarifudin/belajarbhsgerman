@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>German A1 Auto Progress AI</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
+
+body{
+  background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+  color:white;
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+}
+
+.container{width:100%;max-width:750px;}
+
+.card{
+  background:rgba(255,255,255,0.08);
+  backdrop-filter:blur(15px);
+  padding:30px;
+  border-radius:20px;
+  box-shadow:0 20px 40px rgba(0,0,0,0.4);
+  animation:fade 0.5s ease;
+}
+
+h1{text-align:center;margin-bottom:15px;}
+
+.target{
+  background:rgba(255,255,255,0.1);
+  padding:20px;
+  border-radius:15px;
+  font-size:22px;
+  text-align:center;
+  margin:20px 0;
+}
+
+button{
+  padding:12px 18px;
+  border:none;
+  border-radius:12px;
+  margin:5px;
+  cursor:pointer;
+  font-weight:bold;
+  transition:0.3s;
+}
+
+.btn-main{background:#00f5c4;color:#003b2f;}
+.btn-main:hover{transform:scale(1.05);}
+.btn-secondary{background:#ffffff20;color:white;}
+
+.result{
+  margin-top:20px;
+  padding:15px;
+  border-radius:12px;
+  background:rgba(0,0,0,0.3);
+}
+
+.progress{
+  height:10px;
+  background:#ffffff20;
+  border-radius:10px;
+  overflow:hidden;
+  margin-top:10px;
+}
+
+.progress-bar{
+  height:100%;
+  width:0%;
+  background:#00f5c4;
+  transition:0.5s;
+}
+
+.stats{
+  display:flex;
+  justify-content:space-between;
+  margin-top:15px;
+  font-size:14px;
+}
+
+.alert{
+  position:fixed;
+  top:20px;
+  right:20px;
+  background:#00f5c4;
+  color:black;
+  padding:10px 15px;
+  border-radius:10px;
+  opacity:0;
+  transition:0.4s;
+}
+.alert.show{opacity:1;}
+
+@keyframes fade{
+  from{opacity:0;transform:translateY(15px);}
+  to{opacity:1;transform:translateY(0);}
+}
+</style>
+</head>
+
+<body>
+
+<div id="alert" class="alert"></div>
+
+<div class="container">
+<div class="card">
+
+<h1>🇩🇪 German A1 Smart Progress</h1>
+
+<div class="target" id="targetSentence"></div>
+
+<div style="text-align:center;">
+<button class="btn-main" onclick="startRecognition()">🎙️ Bicara</button>
+<button class="btn-secondary" onclick="speakCurrent()">🔊 Dengarkan</button>
+<button class="btn-secondary" onclick="resetProgress()">🔄 Reset</button>
+</div>
+
+<div class="result">
+<div id="recognized">Tekan 🎙️ lalu ucapkan kalimat</div>
+<div id="score"></div>
+<div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+</div>
+
+<div class="stats">
+<div>📚 Progress: <span id="progressText"></span></div>
+<div>⭐ XP: <span id="xp">0</span></div>
+<div>🏆 Level: <span id="level">A1</span></div>
+</div>
+
+</div>
+</div>
+
+<script>
+
+// =========================
+// MATERI SESUAI ISI KAMU
+// =========================
+const materials = [
+"der Bahnhof",
+"die Haltestelle",
+"der Flughafen",
+"fahren",
+"gehen",
+"kommen",
+"Ich fahre",
+"Ich gehe",
+"Ich fahre mit dem Zug",
+"Ich fahre mit dem Bus",
+"Ich gehe zum Bahnhof",
+"Wo ist der Bahnhof",
+"Wie komme ich zum Bahnhof",
+"eins",
+"zwei",
+"drei",
+"vier",
+"fünf",
+"sechs",
+"sieben",
+"acht",
+"neun",
+"zehn",
+"zwanzig",
+"Ich bin 20 Jahre alt",
+"Ich arbeite heute",
+"Ich mag Kaffee",
+"Ich liebe Musik",
+"Ich habe eine Familie",
+"Ich esse Brot",
+"Ich trinke Kaffee",
+"Ich möchte Kaffee bitte",
+"Heute ist kalt",
+"Heute ist warm",
+"Entschuldigung",
+"Bitte",
+"Danke",
+"Ich lerne Deutsch",
+"Du arbeitest heute",
+"Wer bist du",
+"Wo ist der Bahnhof"
+];
+
+// =========================
+
+let index = parseInt(localStorage.getItem("progressIndex")) || 0;
+let xp = parseInt(localStorage.getItem("xp")) || 0;
+
+function updateUI(){
+  document.getElementById("targetSentence").innerText = materials[index];
+  document.getElementById("progressText").innerText = (index+1)+" / "+materials.length;
+  document.getElementById("xp").innerText = xp;
+  updateLevel();
+}
+
+function speakCurrent(){
+  const u = new SpeechSynthesisUtterance(materials[index]);
+  u.lang = "de-DE";
+  speechSynthesis.speak(u);
+}
+
+function normalize(text){
+  return text.toLowerCase().replace(/[.,!?]/g,'').trim();
+}
+
+function similarity(a,b){
+  a=normalize(a); b=normalize(b);
+  const matrix=[];
+  for(let i=0;i<=b.length;i++){matrix[i]=[i];}
+  for(let j=0;j<=a.length;j++){matrix[0][j]=j;}
+  for(let i=1;i<=b.length;i++){
+    for(let j=1;j<=a.length;j++){
+      if(b[i-1]==a[j-1]) matrix[i][j]=matrix[i-1][j-1];
+      else matrix[i][j]=Math.min(
+        matrix[i-1][j-1]+1,
+        matrix[i][j-1]+1,
+        matrix[i-1][j]+1
+      );
+    }
+  }
+  const dist=matrix[b.length][a.length];
+  return ((1-dist/Math.max(a.length,b.length))*100).toFixed(0);
+}
+
+function showAlert(msg){
+  const a=document.getElementById("alert");
+  a.innerText=msg;
+  a.classList.add("show");
+  setTimeout(()=>a.classList.remove("show"),2000);
+}
+
+function updateLevel(){
+  let level="A1";
+  if(xp>200) level="A2";
+  if(xp>500) level="B1";
+  if(xp>1000) level="B2";
+  if(xp>2000) level="C1";
+  if(xp>4000) level="C2";
+  document.getElementById("level").innerText=level;
+}
+
+function nextMaterial(){
+  if(index < materials.length-1){
+    index++;
+    localStorage.setItem("progressIndex",index);
+    updateUI();
+  }else{
+    showAlert("🎉 Semua materi selesai!");
+  }
+}
+
+function startRecognition(){
+  if(!('webkitSpeechRecognition'in window)){
+    alert("Browser tidak support SpeechRecognition");
+    return;
+  }
+
+  const recognition=new webkitSpeechRecognition();
+  recognition.lang='de-DE';
+  recognition.start();
+
+  recognition.onresult=function(e){
+    const spoken=e.results[0][0].transcript;
+    document.getElementById("recognized").innerHTML=
+      "📝 Kamu: <b>"+spoken+"</b>";
+
+    const score=similarity(spoken,materials[index]);
+    document.getElementById("score").innerHTML="🎯 Skor: "+score+"%";
+    document.getElementById("progressBar").style.width=score+"%";
+
+    if(score>=80){
+      xp+=20;
+      localStorage.setItem("xp",xp);
+      showAlert("🔥 Berhasil! Lanjut materi berikutnya");
+      setTimeout(nextMaterial,1200);
+    }else{
+      xp+=5;
+      localStorage.setItem("xp",xp);
+      showAlert("⚠️ Ulangi lagi");
+    }
+
+    updateUI();
+  };
+}
+
+function resetProgress(){
+  localStorage.clear();
+  index=0;
+  xp=0;
+  updateUI();
+  showAlert("Progress direset");
+}
+
+updateUI();
+
+</script>
+</body>
+</html>

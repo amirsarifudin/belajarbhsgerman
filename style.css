@@ -279,3 +279,15 @@ audio{
   button{ width:100%; }
   .card{ padding:14px; }
 }
+
+.site-credit{
+  text-align:center;
+  padding:16px;
+  font-size:14px;
+  color:var(--muted);
+}
+
+.site-credit a{
+  color:var(--primary);
+  font-weight:600;
+}
